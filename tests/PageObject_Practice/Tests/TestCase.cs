@@ -1,7 +1,5 @@
-﻿using AngleSharp.Text;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using PageObject_Practice.Pages;
 

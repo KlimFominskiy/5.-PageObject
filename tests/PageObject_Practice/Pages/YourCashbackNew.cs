@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 
@@ -53,7 +52,7 @@ internal class YourCashbackNew
     public IWebElement ContinueButton { get; set; }
    
     
-    [FindsBy(How = How.XPath, Using = " //div[contains(@class,'block ')]//button")]
+    [FindsBy(How = How.XPath, Using = "//div[contains(@class,'block ')]//button")]
     [CacheLookup]
     public IWebElement acceptCookiesButton { get; set; }
 
