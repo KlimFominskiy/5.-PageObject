@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 
@@ -23,7 +24,7 @@ internal class YourCashbackNew
     [CacheLookup]
     public IWebElement CardHolderMiddleNameInput { get; set; }
 
-    [FindsBy(How = How.XPath, Using = "//rui-radio[@id='formly_15_radio_Sex_0-0']")]
+    [FindsBy(How = How.XPath, Using = "//rui-radio[contains(@id,'radio_Sex_0-0')]")]
     [CacheLookup]
     public IWebElement MaleGenderCheckbox { get; set; }
 
@@ -31,13 +32,13 @@ internal class YourCashbackNew
     [CacheLookup]
     public IWebElement BirthDateInput { get; set; }
 
-    [FindsBy(How = How.XPath, Using = "//input[@id='formly_19_input_Phone_0']")]
+    [FindsBy(How = How.XPath, Using = "//input[@name='Phone']")]
     [CacheLookup]
     public IWebElement PhoneNumberInput { get; set; }
 
     [FindsBy(How = How.XPath, Using = "//mat-select[@name='RussianFederationResident']")]
     [CacheLookup]
-    public IWebElement CitizenshipCombobox { get; set; }
+    public IWebElement CitizenshipComboBox { get; set; }
 
     [FindsBy(How = How.XPath, Using = "//rui-checkbox[contains(@name,'PersonalDataProcessingAgreementConcent')]")]
     [CacheLookup]
@@ -50,6 +51,11 @@ internal class YourCashbackNew
     [FindsBy(How = How.XPath, Using = "//span[text()=' Продолжить ']//ancestor::button")]
     [CacheLookup]
     public IWebElement ContinueButton { get; set; }
+   
+    
+    [FindsBy(How = How.XPath, Using = " //div[contains(@class,'block ')]//button")]
+    [CacheLookup]
+    public IWebElement acceptCookiesButton { get; set; }
 
     public YourCashbackNew(IWebDriver webDriver, WebDriverWait webDriverWait)
     {
@@ -110,10 +116,8 @@ internal class YourCashbackNew
 
     public YourCashbackNew ChooseCitizenship(string citizenship)
     {
-        CitizenshipCombobox.Click();
-
+        CitizenshipComboBox.Click();
         IWebElement option = webDriverWait.Until(driver => driver.FindElement(By.XPath($"//span[text()='{citizenship}']//ancestor::mat-option")));
-
         ChooseOption(option);
 
         return this;
@@ -133,14 +137,34 @@ internal class YourCashbackNew
         return this;
     }
 
-    private void FillInput(IWebElement inputWebElement, string text)
+    public YourCashbackNew AcceptCookies()
+    {
+        acceptCookiesButton.Click();
+
+        return this;
+    }
+
+    public YourCashbackNew FillForm(string firstName, string middleName, string lastName,string gender, DateOnly birthDate,string phoneNumber,
+        string citizenship, bool personalDataProcessingAgreement)
+    {
+        return FillFirstName(firstName)
+            .FillMiddleName(middleName)
+            .FillLastName(lastName)
+            .ChooseMaleGender()
+            .FillBirthDate(birthDate)
+            .FillPhoneNumber(phoneNumber)
+            .ChooseCitizenship(citizenship)
+            .CheckPersonalDataProcessingAgreementConcent();
+    }
+
+    protected void FillInput(IWebElement inputWebElement, string text)
     {
         webDriverWait.Until(driver => inputWebElement.Displayed);
         inputWebElement.Click();
         inputWebElement.SendKeys(text);
     }
 
-    private void ChooseOption(IWebElement optionWebElement)
+    protected void ChooseOption(IWebElement optionWebElement)
     {
         webDriverWait.Until(driver => optionWebElement.Displayed);
         optionWebElement.Click();
